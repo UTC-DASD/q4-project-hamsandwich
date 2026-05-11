@@ -1,3 +1,5 @@
+// Welcome to my special hell.
+
 using UnityEngine;
 
 public class Player : MonoBehaviour
@@ -6,8 +8,9 @@ public class Player : MonoBehaviour
     // Physics Variables
     public float xspeed; // Horizontal Movement
     public float yspeed; // Vertical Movement
-    public float stopspeed = 25f; // How Fast 2 Stop
+    public float stopspeed = 27f; // How Fast 2 Stop
     public float jumpforce = 5f; // How High Two Jump
+
     public bool gravity = true; // Which way is Gravity facing?
 
     void Start()
@@ -27,9 +30,9 @@ public class Player : MonoBehaviour
             xspeed = xspeed + 10f * Time.fixedDeltaTime;
         }
 
-        if(!InputMan.buttonA && !InputMan.buttonD)
+        if(!InputMan.buttonA && !InputMan.buttonD) // Something isn't adding up!
         {
-            xspeed = Mathf.MoveTowards(xspeed, 0, stopspeed * Time.fixedDeltaTime);
+            xspeed = Mathf.MoveTowards(5, 0, stopspeed * Time.fixedDeltaTime);
         }
 
         xspeed = Mathf.Clamp(xspeed, -8.5f, 8.5f);
