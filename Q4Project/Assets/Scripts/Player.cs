@@ -32,7 +32,7 @@ public class Player : MonoBehaviour
 
         if(!InputMan.buttonA && !InputMan.buttonD) // Something isn't adding up!
         {
-            xspeed = Mathf.MoveTowards(5, 0, stopspeed * Time.fixedDeltaTime);
+            xspeed = Mathf.MoveTowards(xspeed, 0, stopspeed * Time.fixedDeltaTime);
         }
 
         xspeed = Mathf.Clamp(xspeed, -8.5f, 8.5f);
