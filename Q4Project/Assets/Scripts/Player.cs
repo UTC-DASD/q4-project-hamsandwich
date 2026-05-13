@@ -32,10 +32,15 @@ public class Player : MonoBehaviour
 
         if(!InputMan.buttonA && !InputMan.buttonD) // Something isn't adding up!
         {
-            xspeed = Mathf.MoveTowards(xspeed, 0, stopspeed * Time.fixedDeltaTime);
+            xspeed = Mathf.MoveTowards(0, 0, stopspeed * Time.fixedDeltaTime);
+        }
+
+        if(InputMan.buttonW) // Moving up!
+        {
+            yspeed = -5;
         }
 
         xspeed = Mathf.Clamp(xspeed, -8.5f, 8.5f);
-        rb.linearVelocity = new Vector2(xspeed, rb.linearVelocity.y);
+        rb.linearVelocity = new Vector2(xspeed, yspeed);
     }
 }
