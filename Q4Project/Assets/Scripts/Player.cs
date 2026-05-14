@@ -5,42 +5,60 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     private Rigidbody2D rb;
-    // Physics Variables
-    public float xspeed; // Horizontal Movement
-    public float yspeed; // Vertical Movement
-    public float stopspeed = 27f; // How Fast 2 Stop
-    public float jumpforce = 5f; // How High Two Jump
 
-    public bool gravity = true; // Which way is Gravity facing?
+    [Header("Movement")]
+    public float moveForce = 10f; // How fast 2 start
+    public float maxSpeed = 9f; // How fast two speed
+    public float stopForce = 27f; // How fast too stop
+    public float jumpForce = 10f; // jump
+    public bool gravity = true;
+    bool OnGround()
+    {
+        float distance = 0.1f;
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, Vector2.down, distance);
+        return hit.collider != null;
+    }
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.constraints = RigidbodyConstraints2D.FreezeRotation;
     }
+
     void FixedUpdate()
     {
-        if(InputMan.buttonA) // If pressing A, move left
+        Vector2 velocity = rb.linearVelocity;
+
+        // Move left
+        if (InputMan.buttonA)
         {
-            xspeed = xspeed - 10f * Time.fixedDeltaTime;
+            rb.AddForce(Vector2.left * moveForce, ForceMode2D.Force);
         }
 
-        if(InputMan.buttonD) // The sequel to moving left. Moving right!
+        // The sequel to moving left: moving right!
+        if (InputMan.buttonD)
         {
-            xspeed = xspeed + 10f * Time.fixedDeltaTime;
+            rb.AddForce(Vector2.right * moveForce, ForceMode2D.Force);
         }
 
-        if(!InputMan.buttonA && !InputMan.buttonD) // Something isn't adding up!
+        // Something is now adding up!
+        if ((!InputMan.buttonA && !InputMan.buttonD) ^ (InputMan.buttonA && InputMan.buttonD))
         {
-            xspeed = Mathf.MoveTowards(0, 0, stopspeed * Time.fixedDeltaTime);
+            velocity.x = Mathf.MoveTowards(velocity.x, 0, stopForce * Time.fixedDeltaTime);
+            rb.linearVelocity = new Vector2(velocity.x, velocity.y);
         }
 
-        if(InputMan.buttonW) // Moving up!
+        // Jump
+        if (InputMan.buttonW && (OnGround()))
         {
-            yspeed = -5;
+            rb.linearVelocity = new Vector2(rb.linearVelocity.x, 0f);      
+            rb.AddForce(Vector2.up * jumpForce, ForceMode2D.Impulse);
         }
 
-        xspeed = Mathf.Clamp(xspeed, -8.5f, 8.5f);
-        rb.linearVelocity = new Vector2(xspeed, yspeed);
+        // Clamp max horizontal speed
+        velocity = rb.linearVelocity;
+        velocity.x = Mathf.Clamp(velocity.x, -maxSpeed, maxSpeed);
+
+        rb.linearVelocity = velocity;
     }
 }
